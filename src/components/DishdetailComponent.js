@@ -5,12 +5,16 @@ import {Breadcrumb, BreadcrumbItem} from 'reactstrap';
 import {Control, LocalForm, Errors} from 'react-redux-form'; 
 import {Loading} from './LoadingComponent';
 import {baseUrl} from '../shared/baseUrl'
-
+import {FadeTransform, Fade, Stagger} from 'react-animation-components'
 
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => val && (val.length >= len);
 function RenderDish({dish}){
     return( 
+        <FadeTransform in 
+        transformProps={{
+            exitTransform: 'scale(0.5) translateY(-50%)'
+        }}>
             <Card>
                 <CardImg lwidth="100%" src={baseUrl + dish.image} alt={dish.name} />
                 <CardBody>
@@ -19,6 +23,7 @@ function RenderDish({dish}){
                 </CardBody>
                 
             </Card>
+        </FadeTransform>
     );
 }
 /*Added component CommentForm that launch the Modal form*/
@@ -100,17 +105,21 @@ class CommentForm extends Component {
 function RenderComments({comments, postComment, dishId}){
     const commentsList = comments.map((comment)=>{
         return(
-            <li key={comment.id}>
-                <p>{comment.comment}</p>
-                <p>--{comment.author}, {new Intl.DateTimeFormat('en-US',{year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</p> 
-            </li>
+            <Fade in>
+                <li key={comment.id}>
+                    <p>{comment.comment}</p>
+                    <p>--{comment.author}, {new Intl.DateTimeFormat('en-US',{year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</p> 
+                </li>
+            </Fade>
         )
     }); 
     if(comments!= null){
         return(<div>
                 <h4>Comments</h4>
                 <ul className="list-unstyled"> 
+                <Stagger in>
                     {commentsList}
+                </Stagger>
                 </ul>
                 {/*We add here the component button and modal*/}
                 <CommentForm dishId={dishId} postComment={postComment}/>  
