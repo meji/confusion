@@ -1,19 +1,18 @@
 import * as ActionTypes from './ActionTypes'; 
-import {DISHES} from '../shared/dishes';
 import {baseUrl} from '../shared/baseUrl'
 
 
-export const addComment = (dishId, rating, author, comment) => ({
+export const addComment = (comment) => ({
     type: ActionTypes.ADD_COMMENT,
     payload: comment
 })
 
 export const postComment = (dishId, rating, author, comment) => (dispatch) => {
     const newComment = {
-        dishId,
-        rating,
-        author, 
-        comment
+        dishId: dishId,
+        rating: rating,
+        author: author, 
+        comment: comment
     }
     newComment.date = new Date().toISOString(); 
 
@@ -35,8 +34,7 @@ export const postComment = (dishId, rating, author, comment) => (dispatch) => {
         }
     },
     error => {
-            var errmess = new Error(error.message);
-            throw errmess
+            throw error
     })
     .then(response => response.json())
     .then(response =>dispatch(addComment(response)))
